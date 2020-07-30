@@ -1,4 +1,4 @@
-package com.example.resilience4j.service;
+package com.example.resilience4j.service.circuitbreaker;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;

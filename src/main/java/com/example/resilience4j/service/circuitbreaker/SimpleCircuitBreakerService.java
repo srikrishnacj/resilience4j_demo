@@ -1,6 +1,7 @@
-package com.example.resilience4j.service;
+package com.example.resilience4j.service.circuitbreaker;
 
-import com.example.resilience4j.client.SimpleCircuitBreakerClient;
+import com.example.resilience4j.client.AbstractSimpleClient;
+import com.example.resilience4j.web.to.SimpleWebRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,20 +10,20 @@ import java.lang.reflect.UndeclaredThrowableException;
 
 @Service
 public class SimpleCircuitBreakerService {
-    private final SimpleCircuitBreakerClient simpleClient;
+    private final AbstractSimpleClient abstractSimpleClient;
     private static final Logger log = LoggerFactory.getLogger(SimpleCircuitBreakerService.class);
 
-    public SimpleCircuitBreakerService(SimpleCircuitBreakerClient simpleClient) {
-        this.simpleClient = simpleClient;
+    public SimpleCircuitBreakerService(AbstractSimpleClient abstractSimpleClient) {
+        this.abstractSimpleClient = abstractSimpleClient;
     }
 
-    public void call(boolean shouldFail, int responseDurationMs, boolean shouldUseFallback) {
-        log.info("Entering SimpleCircuitBreakerService.call() " + "shouldFail = " + shouldFail + ", responseDurationMs = " + responseDurationMs + ", shouldUseFallback = " + shouldUseFallback);
+    public void call(SimpleWebRequest request) {
+        log.info("From service calling Client");
         try {
-            if (shouldUseFallback) {
-                this.simpleClient.callWithFallback(shouldFail, responseDurationMs);
+            if (request.isShouldUseCircuitFallback()) {
+                this.abstractSimpleClient.circuit_failover(request);
             } else {
-                this.simpleClient.callWithOutFallback(shouldFail, responseDurationMs);
+                this.abstractSimpleClient.only_circuit(request);
             }
         } catch (UndeclaredThrowableException e) {
             // this exception will occure when problem with circuit breaker config.
@@ -32,8 +33,6 @@ public class SimpleCircuitBreakerService {
             e.printStackTrace();
         } catch (Exception e) {
             log.info("Client Returned Exception: {}", e.getClass().getSimpleName());
-        } finally {
-            log.info("Leaving SimpleCircuitBreakerService.call()");
         }
     }
 }

@@ -12,5 +12,16 @@ resilience4j.circuitbreaker:
       slowCallRateThreshold: 50
       slowCallDurationThreshold: 500
   instances:
-    backend:
+    simple_circuit_breaker:
+      baseConfig: default
+
+resilience4j.retry:
+  configs:
+    default:
+      maxRetryAttempts: 3
+      waitDuration: 3s
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+  instances:
+    simple_retry:
       baseConfig: default
