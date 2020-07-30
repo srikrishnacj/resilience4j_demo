@@ -9,6 +9,8 @@ resilience4j.circuitbreaker:
       failureRateThreshold: 40
       eventConsumerBufferSize: 10
       registerHealthIndicator: true
+      slowCallRateThreshold: 50
+      slowCallDurationThreshold: 500
   instances:
     backend:
       baseConfig: default

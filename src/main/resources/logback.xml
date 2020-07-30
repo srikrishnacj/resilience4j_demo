@@ -1,0 +1,17 @@
+<configuration debug="true">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>[%d{HH:mm:ss.SSS}] %highlight(%-5level) %blue([%30logger{0}]) - RID:%X{rid} %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.springframework" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="com.example" level="ALL" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
